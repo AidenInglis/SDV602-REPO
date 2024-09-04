@@ -1,16 +1,17 @@
-# inventory.py
-
-player_inventory = []
+# inventory.py 
+inventory = {
+    'health_potion': False# deault false as game starts without any item
+}
 
 def add_item(item):
-    """Add an item to the player's inventory."""
-    player_inventory.append(item)
+    if item in inventory:
+        inventory[item] = True
 
-def remove_item(item):
-    """Remove an item from the player's inventory."""
-    if item in player_inventory:
-        player_inventory.remove(item)
+def has_item(item):
+    return inventory.get(item, False)
 
-def show_inventory():
-    """Display the player's inventory."""
-    return player_inventory
+def use_item(item):
+    if has_item(item):
+        if item == 'health_potion':
+            return True
+    return False

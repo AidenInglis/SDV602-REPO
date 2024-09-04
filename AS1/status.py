@@ -3,12 +3,13 @@
 player_status = {
     'alive': True,
     'health': 100,
-    'attack_strength': 10
+    'strength': 10
 }
 
 monster_status = {
     'alive': True,
-    'health': 50
+    'health': 50,
+    'strength': 5
 }
 
 game_status = {

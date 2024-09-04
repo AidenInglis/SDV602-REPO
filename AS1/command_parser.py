@@ -1,52 +1,33 @@
 # command_parser.py
 from story import game_play, get_game_state
+from monster_fight import MonsterFight
+from inventory import add_item, has_item, use_item
 
+monster_fight = MonsterFight()
 def parse_command(command):
     command = command.lower().strip()
     current_state = get_game_state()
-    print(f"Received command: '{command}' with current game_state: '{current_state}'")
 
-    if current_state == 'Room5':
-        print("Entered Room5 command handling")
-        if 'yes' in command:
-            return game_play('yes')
-        elif 'no' in command:
-            return game_play('no')
-        else:
-            return "You are in Room5\nInvalid command. Please enter 'yes' or 'no'."
+    if current_state == 'Room3':
+        if 'pickup' in command:
+            add_item('health_potion')
+            return "You picked up a health potion!"
 
-    elif current_state == 'BossRoom':
-        print("Entered BossRoom command handling")
-        if 'yes' in command:
-            return game_play('yes')
-        elif 'no' in command:
-            return game_play('no')
-        else:
-            return "You are in the BossRoom\nInvalid command. Please enter 'yes' or 'no'."
+    if current_state in ['Room5', 'BossRoom', 'TooLate']:
+        return game_play(command)
 
-    elif current_state == 'TooLate':
-            print("Entered TooLate command handling")
-            if 'yes' in command:
-                return game_play('yes')
-            elif 'no' in command:
-                return game_play('no')
+    if current_state == 'BossFight':
+        if command == 'attack':
+            return monster_fight.player_attack()
+        elif command == 'heal':
+            if use_item('health_potion'):
+                return monster_fight.player_heal()
             else:
-                return "You are in the 'TooLate'\nInvalid command. Please enter 'yes' or 'no'."
-            
-    elif current_state == 'BossFight':
-        print("Entered BossFight command handling")
-        if 'attack' in command:
-            return game_play('attack')
-        elif 'heal' in command:
-            return game_play('heal')
+                return "You don't have a health potion to use."
         else:
-            return "You are in the BossFight\nInvalid command. Please enter 'attack' or 'heal'."
+            return "Invalid command. Please enter 'attack' or 'heal'."
 
-
+    if 'left' in command or 'right' in command:
+        return game_play(command)
     else:
-        if 'left' in command:
-            return game_play('left')
-        elif 'right' in command:
-            return game_play('right')
-        else:
-            return "Invalid command. Please enter 'left' or 'right'."
+        return "Invalid command."

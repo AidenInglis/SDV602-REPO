@@ -38,7 +38,7 @@ game_places = {
         'Image': 'assets/forest_circle.png'
     },
     'Room5': {
-        'Story': 'You are in Room5.\nThere are doors ahead of you, enter?',
+        'Story': 'You are in Room5.\nThere are doors ahead of you with rumbling coming from inside, enter?',
         'yes': 'BossRoom',
         'no': 'Room4',
         'Image': 'assets/forest_circle.png'
@@ -80,85 +80,32 @@ def show_current_place():
 
 
 def game_play(direction):
-    global game_state  # Use global to modify the global game_state variable
-    print(f"game_play received direction: '{direction}' with current game_state: '{game_state}'")  # Debug statement
+    global game_state
 
-    if game_state == 'Room5':
-        print(f"Handling Room5 commands: {game_places[game_state]}")  # Debug print to show current place info
-        
+    if game_state in ['Room5', 'BossRoom', 'TooLate']:
         if direction.lower() in ['yes', 'no']:
             next_state = game_places[game_state].get(direction.lower())
             if next_state:
-                print(f"Transitioning from {game_state} to {next_state}")  # Debug statement
-                game_state = next_state  # Update the game state
-                print(f"New game_state: {game_state}")  # Confirm the state change
+                game_state = next_state
                 return game_places[game_state]['Story']
             else:
-                print("Invalid state transition.")  # Debug statement
                 return "Invalid transition."
         else:
             return "Invalid input.\nPlease choose 'yes' or 'no'."
-    
-    if game_state == 'BossRoom':
-        print(f"Handling Bossroom commands: {game_places[game_state]}")  # Debug print to show current place info
-        
-        if direction.lower() in ['yes', 'no']:
-            next_state = game_places[game_state].get(direction.lower())
-            if next_state:
-                print(f"Transitioning from {game_state} to {next_state}")  # Debug statement
-                game_state = next_state  # Update the game state
-                print(f"New game_state: {game_state}")  # Confirm the state change
-                return game_places[game_state]['Story']
-            else:
-                print("Invalid state transition.")  # Debug statement
-                return "Invalid transition."
-        else:
-            return "Invalid input for BossRoom\nPlease choose 'yes' or 'no'."
-    
-    if game_state == 'TooLate':
-        print(f"Handling TooLate commands: {game_places[game_state]}")  # Debug print to show current place info
-        
-        if direction.lower() in ['yes', 'no']:
-            next_state = game_places[game_state].get(direction.lower())
-            if next_state:
-                print(f"Transitioning from {game_state} to {next_state}")  # Debug statement
-                game_state = next_state  # Update the game state
-                print(f"New game_state: {game_state}")  # Confirm the state change
-                return game_places[game_state]['Story']
-            else:
-                print("Invalid state transition.")  # Debug statement
-                return "Invalid transition."
-        else:
-            return "Invalid input for 'TooLate'.\nPlease choose 'yes' or 'no'."
 
-
-    #this snippet i need to rewrire for the boss fight and heal and item and so on with the player and monster stats.
     if game_state == 'BossFight':
-            print(f"Handling BossFight commands: {game_places[game_state]}")  # Debug print to show current place info
-            
-            if direction.lower() in ['attack', 'heal']:
-                next_state = game_places[game_state].get(direction.lower())
-                if next_state: 
-                    print(f"Transitioning from {game_state} to {next_state}")  # Debug statement
-                    game_state = next_state  # Update the game state
-                    print(f"New game_state: {game_state}")  # Confirm the state change
-                    return game_places[game_state]['Story']
-                else:
-                    print("Have not setup this code yet")  # Debug statement
-                    return "Invalid Region, Location not finished development."
-            else:
-                return "Invalid input for 'BossFight'.\nPlease choose 'attack' or 'heal'."
+        if direction.lower() in ['attack', 'heal']:
+            # This is just for debugging, actual combat handling is managed in `command_parser.py`
+            return "Handling BossFight commands."
+        else:
+            return "Invalid input for BossFight. Please choose 'attack' or 'heal'."
 
     elif direction.lower() in ['left', 'right']:
         proposed_state = game_places[game_state].get(direction.lower(), '')
-        print(f"Proposed state for direction '{direction}': {proposed_state}")  # Debug statement
-        
-        if proposed_state == '':
-            return 'You cannot go that way.\n' + game_places[game_state]['Story']
-        else:
+        if proposed_state:
             game_state = proposed_state
-            print(f"Updated game_state to: {game_state}")  # Confirm the state change
             return game_places[game_state]['Story']
-
+        else:
+            return 'You cannot go that way.\n' + game_places[game_state]['Story']
     else:
         return "Invalid direction.\nPlease choose 'left' or 'right'."
